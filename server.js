@@ -1,27 +1,26 @@
 const express = require("express");
-const tracery = require('tracery-grammar');
-const maritimeLocationsJson = require('./maritimeLocations.json');
+const tracery = require("tracery-grammar");
+const maritimeLocationsJson = require("./maritimeLocations.json");
 const app = express();
 
-var grammar = tracery.createGrammar(maritimeLocationsJson);
-for (let i = 0; i < 3; i++) {
-  var print = grammar.flatten("#line#");
-  console.log(print);
+function getPirateLocations(number) {
+  let locationsArray = [];
+  const grammar = tracery.createGrammar(maritimeLocationsJson);
+  for (let i = 0; i < number; i++) {
+    let print = grammar.flatten("#line#");
+    locationsArray.push(print);
+  }
+  console.log(locationsArray)
 }
-
+getPirateLocations(3);
 // make all the files in 'public' available
 // https://expressjs.com/en/starter/static-files.html
 app.use(express.static("public"));
 
-// https://expressjs.com/en/starter/basic-routing.html
-app.get("/", (request, response) => {
-  response.sendFile(__dirname + "/views/index.html");
-});
-
 // send the default array of dreams to the webpage
-app.get("/dreams", (request, response) => {
+app.get("/", (request, response) => {
   // express helps us take JS objects and send them as JSON
-  response.json(dreams);
+  response.json(maritimeLocationsJson);
 });
 
 // listen for requests :)
