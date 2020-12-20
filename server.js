@@ -1,13 +1,33 @@
-
 const express = require("express");
+const tracery = require('tracery-grammar');
 const app = express();
 
-// our default array of dreams
-const dreams = [
-  "Find and count some sheep",
-  "Climb a really tall mountain",
-  "Wash the dishes"
-];
+let json = {
+    "line":[
+        "#descriptiveAdj# #establishedLoc#",
+        "#descriptiveAdj# #possessiveAdj# #establishedLoc#",
+        "#descriptiveAdj# #geographicalLoc#",
+        "#descriptiveAdj# #possessiveAdj# #geographicalLoc#",
+        "#descriptiveAdj# #establishedLoc# #postnominalModifers#",
+        "#possessiveAdj# #geographicalLoc# #postnominalModifers#",
+        "#descriptiveAdj# #geographicalLoc# #postnominalModifers#",
+        "#possessiveAdj# #geographicalLoc# #postnominalModifers#",
+        "#establishedLoc# #postnominalModifers#",
+        "#geographicalLoc# #postnominalModifers#"
+  
+    ],
+    "descriptiveAdj":["Blackend","Broken","Concealed","Dreaded","Fancy","Grand","Hidden","Mystic", "Plentiful", "Ravaged", "Royal", "Salted", "Scorched", "Secluded", "Secret", "Splendid", "Stolen", "Sunken", "Sweet", "Wrecked"],
+    "possessiveAdj":["Barracuda's", "Captain's", "Dragon's", "Guild's", "Hunter's", "Kraken's", "Maiden's", "Mermaid's", "Order's", "Parrot's", "Raider's", "Sailor's", "Shark's", "Shipwreck's", "Siren's", "Storm's", "Thieves'", "Triton's", "Turtle's", "Wanderer's"],
+    "establishedLoc":["Asyulum", "Bounty", "Den", "Fort", "Gem", "Harbor", "Haven", "Hideout", "Hold", "Jewel", "Keep", "Port", "Refuge", "Rest", "Retreat", "Sanctuary", "Shelter", "Stronghold", "Treasure", "Trove"],
+    "geographicalLoc": ["Archipelago", "Atoll", "Bay", "Bluffs", "Cliffs", "Cove", "Crag", "Enclave", "Groves", "Hollow", "Island", "Isle", "Lagoon", "Peninsula", "Reef", "Ridge", "Rock", "Sands", "Shallows", "Shores"],
+    "postnominalModifers": ["amidst the Maelstroms", "between the Waves", "in the Mists", "in the Shadows", "of a Thousand Coins", "of Plentiful Riches", "of Skulls", "of the Countless Wrecks", "of the Cursed", "of the Damned", "of the Depths", "of the Homesick", "of the Lawless", "of the Lost Souls", "of the Moon", "of the Raven", "of the Sunset", "of the Sweet Embrace", "of the Tides", "of Whispers"]
+};
+
+var grammar = tracery.createGrammar(json);
+for (let i = 0; i < 20; i++) {
+  var print = grammar.flatten("#line#");
+  console.log(print);
+}
 
 // make all the files in 'public' available
 // https://expressjs.com/en/starter/static-files.html
