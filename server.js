@@ -1,7 +1,28 @@
-const express = require("express");
+const grpc = require('@grpc/grpc-js')
+const protoLoader = require('@grpc/proto-loader')
 const tracery = require("tracery-grammar");
+
+var PROTO_PATH = './helloworld.proto';
+
+var packageDefinition = protoLoader.loadSync(
+    PROTO_PATH,
+    {keepCase: true,
+     longs: String,
+     enums: String,
+     defaults: true,
+     oneofs: true
+    });
+var hello_proto = grpc.loadPackageDefinition(packageDefinition).helloworld;
+
+function sayHello(call, callback) {
+  callback(null, {message: 'Hello ' + call.request.name});
+}
+console.log("echo")
+function sayHelloAgain(call, callback){
+  callback(null, {message: 'Hello Once Again, ' + call.request.name})
+}
+
 const maritimeLocationsJson = require("./maritimeLocations.json");
-const app = express();
 
 function getPirateLocations(number) {
   let locationsArray = [];
@@ -12,18 +33,17 @@ function getPirateLocations(number) {
   }
   console.log(locationsArray)
 }
-getPirateLocations(3);
-// make all the files in 'public' available
-// https://expressjs.com/en/starter/static-files.html
-app.use(express.static("public"));
 
-// send the default array of dreams to the webpage
-app.get("/", (request, response) => {
-  // express helps us take JS objects and send them as JSON
-  response.json(maritimeLocationsJson);
-});
+function main() {
+  var server = new grpc.Server();
+  server.addService(hello_proto.Greeter.service, 
+    {
+      sayHello: sayHello,
+      sayHelloAgain: sayHelloAgain
+    });
+    server.bindAsync('0.0.0.0:50051', grpc.ServerCredentials.createInsecure(), () => {
+    server.start();
+  });
+}
 
-// listen for requests :)
-const listener = app.listen(process.env.PORT, () => {
-  console.log("Your app is listening on port " + listener.address().port);
-});
+main();
