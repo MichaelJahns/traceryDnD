@@ -24,7 +24,7 @@ let json = {
 };
 
 var grammar = tracery.createGrammar(json);
-for (let i = 0; i < 20; i++) {
+for (let i = 0; i < 3; i++) {
   var print = grammar.flatten("#line#");
   console.log(print);
 }
